@@ -178,6 +178,16 @@ uint64          walkaddr(pagetable_t, uint64);
 int             copyout(pagetable_t, uint64, char *, uint64);
 int             copyin(pagetable_t, char *, uint64, uint64);
 int             copyinstr(pagetable_t, char *, uint64, uint64);
+void            vmprint(pagetable_t);
+pagetable_t     proc_kpt_init(void);   //用于内核页表初始化
+void            uvmmap(pagetable_t,uint64,uint64,uint64,int);
+void            proc_inithart(pagetable_t);     //将进程的内核页表保存到SATP寄存器
+void            proc_freekernelpt(pagetable_t pagetable);
+
+// vmcopyin.c
+int             copyin_new(pagetable_t, char *, uint64, uint64);
+int             copyinstr_new(pagetable_t, char *, uint64, uint64);
+void            u2kvmcopy(pagetable_t, pagetable_t, uint64,uint64);
 
 // plic.c
 void            plicinit(void);

@@ -16,9 +16,13 @@
 #include "fs.h"
 #include "buf.h"
 #include "virtio.h"
+#include "proc.h"
 
 // the address of virtio mmio register r.
 #define R(r) ((volatile uint32 *)(VIRTIO0 + (r)))
+
+
+
 
 static struct disk {
  // memory for virtio descriptors &c for queue 0.
@@ -223,6 +227,9 @@ virtio_disk_rw(struct buf *b, int write)
   disk.desc[idx[2]].flags = VRING_DESC_F_WRITE; // device writes the status
   disk.desc[idx[2]].next = 0;
 
+  // struct proc *p = myproc();
+  // disk.desc[idx[0]].addr = (uint64) vmpa(p->kernelpt,(uint64) &buf0);
+
   // record struct buf for virtio_disk_intr().
   b->disk = 1;
   disk.info[idx[0]].b = b;
@@ -268,3 +275,5 @@ virtio_disk_intr()
 
   release(&disk.vdisk_lock);
 }
+
+

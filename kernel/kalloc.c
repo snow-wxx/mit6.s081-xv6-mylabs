@@ -19,7 +19,7 @@ struct run {
 };
 
 struct {
-  struct spinlock lock;
+  struct spinlock lock;   //自旋锁
   struct run *freelist;
 } kmem;
 
