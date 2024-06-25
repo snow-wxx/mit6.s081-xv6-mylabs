@@ -41,7 +41,7 @@ sys_wait(void)
 uint64
 sys_sbrk(void)
 {
-  int addr;
+  int addr; 
   int n;
 
   if(argint(0, &n) < 0)
@@ -63,6 +63,22 @@ sys_sbrk(void)
   // myproc()->sz += n;
   return addr;
 }
+
+// uint64
+// sys_sbrk(void)
+// {
+//   int addr;
+//   int n;
+
+//   if(argint(0, &n) < 0)
+//     return -1;
+
+//   struct proc* p = myproc();
+//   addr = p->sz;
+//   myproc()->sz += n;
+  
+//   return addr;
+// }
 
 uint64
 sys_sleep(void)
