@@ -87,7 +87,7 @@ usertrap(void)
       p->is_alarming = 1;
     }
     yield();
-}
+  }
   usertrapret();
 }
 

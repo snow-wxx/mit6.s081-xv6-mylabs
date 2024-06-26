@@ -122,6 +122,7 @@ panic(char *s)
   printf(s);
   printf("\n");
   panicked = 1; // freeze uart output from other CPUs
+  backtrace();
   for(;;)
     ;
 }
@@ -134,7 +135,7 @@ printfinit(void)
 }
 
 /**
- * @brief backtrace 回溯函数调用的返回地址
+ * backtrace 回溯函数调用的返回地址
  */
 void
 backtrace(void) {

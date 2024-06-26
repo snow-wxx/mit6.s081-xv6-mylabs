@@ -135,7 +135,6 @@ found:
 
   p->is_alarming = 0;
   p->alarm_interval = 0;
-  p->alarm_interval = 0;
   p->ticks_count = 0;
 
   return p;
