@@ -50,7 +50,7 @@ usertrap(void)
   // save user program counter.
   p->trapframe->epc = r_sepc();
 
-  uint64 cause = r_scause();
+  uint64 cause = r_scause();  //返回值是否为13或15来判断该错误是否为页面错误
   if(cause == 8){
     // system call
 
@@ -69,16 +69,16 @@ usertrap(void)
   } else if((which_dev = devintr()) != 0){
     // ok
   
-  } else if(cause==13 || cause==15)
+  } else if(cause==13 || cause==15)  //页表错误
   {
     // 处理页面错误
     uint64 fault_va = r_stval();  // 产生页面错误的虚拟地址
     char* pa;                     // 分配的物理地址
-    if(PGROUNDUP(p->trapframe->sp) - 1 < fault_va && fault_va < p->sz && (pa = kalloc()) != 0) {
-        memset(pa, 0, PGSIZE);
+    if(PGROUNDUP(p->trapframe->sp) - 1 < fault_va && fault_va < p->sz && (pa = kalloc()) != 0) {  //在保护页下不能执行懒分配
+        memset(pa, 0, PGSIZE);   //使用PGROUNDDOWN(va)将出错的虚拟地址向下舍入到页面边界
         if(mappages(p->pagetable, PGROUNDDOWN(fault_va), PGSIZE, (uint64)pa, PTE_R | PTE_W | PTE_X | PTE_U) != 0) {
           kfree(pa);
-          p->killed = 1;
+          p->killed = 1;  //发生错误 直接将进程kill
         }
     }else{
       // printf("usertrap(): out of memory!\n");
