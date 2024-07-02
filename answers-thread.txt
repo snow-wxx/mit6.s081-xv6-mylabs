@@ -1,0 +1,17 @@
+thread_a started
+thread_b started
+thread_c started
+thread_c 0
+thread_a 0
+thread_b 0
+thread_c 1
+thread_a 1
+thread_b 1
+...
+thread_c 99
+thread_a 99
+thread_b 99
+thread_c: exit after 100
+thread_a: exit after 100
+thread_b: exit after 100
+thread_schedule: no runnable threads

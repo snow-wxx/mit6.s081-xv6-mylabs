@@ -34,6 +34,7 @@ insert(int key, int value, struct entry **p, struct entry *n)
   e->next = n;
   *p = e;
 }
+pthread_mutex_t lock[NBUCKET] = { PTHREAD_MUTEX_INITIALIZER }; // 每个散列桶一把锁
 
 static 
 void put(int key, int value)
@@ -50,8 +51,11 @@ void put(int key, int value)
     // update the existing key.
     e->value = value;
   } else {
+    pthread_mutex_lock(&lock[i]);
+
     // the new is new.
     insert(key, value, &table[i], table[i]);
+    pthread_mutex_unlock(&lock[i]);
   }
 }
 

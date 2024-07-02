@@ -460,14 +460,14 @@ scheduler(void)
   struct cpu *c = mycpu();
   
   c->proc = 0;
-  for(;;){
+  for(;;){    //循环找到要运行的进程
     // Avoid deadlock by ensuring that devices can interrupt.
     intr_on();
     
     int nproc = 0;
     for(p = proc; p < &proc[NPROC]; p++) {
-      acquire(&p->lock);
-      if(p->state != UNUSED) {
+      acquire(&p->lock);    //获得锁
+      if(p->state != UNUSED) {  //更新状态
         nproc++;
       }
       if(p->state == RUNNABLE) {
@@ -482,7 +482,7 @@ scheduler(void)
         // It should have changed its p->state before coming back.
         c->proc = 0;
       }
-      release(&p->lock);
+      release(&p->lock);  //释放锁
     }
     if(nproc <= 2) {   // only init and sh exist
       intr_on();
@@ -504,17 +504,17 @@ sched(void)
   int intena;
   struct proc *p = myproc();
 
-  if(!holding(&p->lock))
+  if(!holding(&p->lock))   //进程获得自己的进程锁
     panic("sched p->lock");
-  if(mycpu()->noff != 1)
+  if(mycpu()->noff != 1)    //释放持有的所有锁
     panic("sched locks");
-  if(p->state == RUNNING)
+  if(p->state == RUNNING)   //更新状态
     panic("sched running");
   if(intr_get())
     panic("sched interruptible");
 
   intena = mycpu()->intena;
-  swtch(&p->context, &mycpu()->context);
+  swtch(&p->context, &mycpu()->context);    //将当前上下文保存在p->context中，并切换到先前保存在cpu->scheduler中的调度程序上下文
   mycpu()->intena = intena;
 }
 
