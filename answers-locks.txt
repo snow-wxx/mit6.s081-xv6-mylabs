@@ -1,0 +1,26 @@
+start test1
+test1 results:
+--- lock kmem/bcache stats
+lock: kmem: #fetch-and-add 0 #acquire() 42843
+lock: kmem: #fetch-and-add 0 #acquire() 198674
+lock: kmem: #fetch-and-add 0 #acquire() 191534
+lock: bcache: #fetch-and-add 0 #acquire() 1242
+--- top 5 contended locks:
+lock: proc: #fetch-and-add 43861 #acquire() 117281
+lock: virtio_disk: #fetch-and-add 5347 #acquire() 114
+lock: proc: #fetch-and-add 4856 #acquire() 117312
+lock: proc: #fetch-and-add 4168 #acquire() 117316
+lock: proc: #fetch-and-add 2797 #acquire() 117266
+tot= 0
+test1 OK
+start test2
+total free number of pages: 32499 (out of 32768)
+.....
+test2 OK
+$ usertests sbrkmuch
+usertests starting
+test sbrkmuch: OK
+ALL TESTS PASSED
+$ usertests
+...
+ALL TESTS PASSED
