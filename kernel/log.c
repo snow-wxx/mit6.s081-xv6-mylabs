@@ -124,12 +124,12 @@ recover_from_log(void)
 
 // called at the start of each FS system call.
 void
-begin_op(void)
+begin_op(void)   //等待直到日志系统当前未处于提交中，并且直到有足够的未被占用的日志空间来保存此调用的写入
 {
   acquire(&log.lock);
   while(1){
     if(log.committing){
-      sleep(&log, &log.lock);
+      sleep(&log, &log.lock);    //log.outstanding统计预定了日志空间的系统调用数
     } else if(log.lh.n + (log.outstanding+1)*MAXOPBLOCKS > LOGSIZE){
       // this op might exhaust log space; wait for commit.
       sleep(&log, &log.lock);
@@ -149,10 +149,10 @@ end_op(void)
   int do_commit = 0;
 
   acquire(&log.lock);
-  log.outstanding -= 1;
+  log.outstanding -= 1;  //减少未完成系统调用的计数
   if(log.committing)
     panic("log.committing");
-  if(log.outstanding == 0){
+  if(log.outstanding == 0){   //计数为零，则通过调用commit()提交当前事务
     do_commit = 1;
     log.committing = 1;
   } else {
@@ -212,7 +212,7 @@ commit()
 //   log_write(bp)
 //   brelse(bp)
 void
-log_write(struct buf *b)
+log_write(struct buf *b)  //将块的扇区号记录在内存中，在磁盘上的日志中预定一个槽位
 {
   int i;
 
@@ -228,7 +228,7 @@ log_write(struct buf *b)
   }
   log.lh.block[i] = b->blockno;
   if (i == log.lh.n) {  // Add new block to log?
-    bpin(b);
+    bpin(b);    //调用bpin将缓存固定在block cache中，以防止block cache将其逐出
     log.lh.n++;
   }
   release(&log.lock);

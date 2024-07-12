@@ -24,7 +24,7 @@ main()
     trapinithart();  // install kernel trap vector
     plicinit();      // set up interrupt controller
     plicinithart();  // ask PLIC for device interrupts
-    binit();         // buffer cache
+    binit();         // buffer cache  使用使用静态数组buf中的NBUF个缓冲区初始化列表
     iinit();         // inode cache
     fileinit();      // file table
     virtio_disk_init(); // emulated hard disk
