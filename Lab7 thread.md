@@ -49,7 +49,7 @@ RISC-V将所有CPU进行编号，该编号称为*hartid*，确保每个CPU的har
 
 ----------------------
 
-Lab 7: thread
+### Lab 7: thread
 
 * 实现一个用户层面的线程系统,
   * 在`uthread_switch.S`中,仿照`swtch.S`进行上下文寄存器的保存和切换
