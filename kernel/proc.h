@@ -83,6 +83,19 @@ struct trapframe {
 enum procstate { UNUSED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
 // Per-process state
+#define NVMA 16
+
+// 虚拟内存区域结构体
+struct vm_area {
+  int used;           // 是否已被使用
+  uint64 addr;        // 起始地址
+  int len;            // 长度
+  int prot;           // 权限
+  int flags;          // 标志位
+  int vfd;            // 对应的文件描述符
+  struct file* vfile; // 对应文件
+  int offset;         // 文件偏移，本实验中一直为0
+};
 struct proc {
   struct spinlock lock;
 
@@ -93,7 +106,7 @@ struct proc {
   int killed;                  // If non-zero, have been killed
   int xstate;                  // Exit status to be returned to parent's wait
   int pid;                     // Process ID
-
+  
   // these are private to the process, so p->lock need not be held.
   uint64 kstack;               // Virtual address of kernel stack
   uint64 sz;                   // Size of process memory (bytes)
@@ -103,4 +116,5 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  struct vm_area vma[NVMA];    // 虚拟内存区域
 };
